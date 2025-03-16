@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const model_id = "onnx-community/Kokoro-82M-v1.0-ONNX";
             const tts = await KokoroTTS.from_pretrained(model_id, {
             dtype: "fp32", // Options: "fp32", "fp16", "q8", "q4", "q4f16"
-            // device: "webgpu", // Options: "wasm", "webgpu" (web) or "cpu" (node).
+            device: "webgpu", // Options: "wasm", "webgpu" (web) or "cpu" (node).
             });
 
             console.log('Setting up Splitter...')
