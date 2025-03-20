@@ -7,6 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', async () => {
             try {
                 const script = `
+                    var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+                        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+                        return new (P || (P = Promise))(function (resolve, reject) {
+                            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+                            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+                            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+                            step((generator = generator.apply(thisArg, _arguments || [])).next());
+                        });
+                    };
                     (async () => {
                         const { KokoroTTS, TextSplitterStream } = await import("kokoro-js");
 
@@ -31,9 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         // For this example, let's pretend we're consuming text from an LLM, one word at a time.
                         const text = "BOMBACLAAT!";
                         const tokens = text.match(/\\s*\\S+/g);
-                        for (const token of tokens) {
-                            splitter.push(token);
-                            await new Promise((resolve) => setTimeout(resolve, 10));
+                        if (tokens) {
+                            for (const token of tokens) {
+                                splitter.push(token);
+                                await new Promise((resolve) => setTimeout(resolve, 10));
+                            }
                         }
 
                         // Finally, close the stream to signal that no more text will be added.
@@ -42,10 +53,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
 
                 chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-                    if (tabs[0].id) {
+                    if (tabs[0].id && this) {
+
                         chrome.scripting.executeScript({
                             target: { tabId: tabs[0].id },
                             func: () => {
+                                var __awaiter = (this && this.__awaiter) || function (thisArg: any, _arguments: any, P: PromiseConstructor, generator: { [x: string]: (arg0: any) => any; next: (arg0: any) => any; apply: (arg0: any, arg1: any) => any; }) {
+                                    function adopt(value: any) { return value instanceof P ? value : new P(function (resolve: (arg0: any) => void) { resolve(value); }); }
+                                    return new (P || (P = Promise))(function (resolve: (arg0: any) => any, reject: (arg0: any) => void) {
+                                        function fulfilled(value: any) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+                                        function rejected(value: any) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+                                        function step(result: { done: any; value: any; }) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+                                        step((generator = generator.apply(thisArg, _arguments || [])).next());
+                                    });
+                                };
                                 (async () => {
                                     const { KokoroTTS, TextSplitterStream } = await import("kokoro-js");
 
@@ -70,9 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                     // For this example, let's pretend we're consuming text from an LLM, one word at a time.
                                     const text = "BOMBACLAAT!";
                                     const tokens = text.match(/\s*\S+/g);
-                                    for (const token of tokens) {
-                                        splitter.push(token);
-                                        await new Promise((resolve) => setTimeout(resolve, 10));
+                                    if (tokens) {
+                                        for (const token of tokens) {
+                                            splitter.push(token);
+                                            await new Promise((resolve) => setTimeout(resolve, 10));
+                                        }
                                     }
 
                                     // Finally, close the stream to signal that no more text will be added.
